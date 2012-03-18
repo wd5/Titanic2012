@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load content %}
-{% load russian %}
+{% load pytils_dt %}
 
 {% block content %}
     <h1><a href="{% url forum_index %}">Форум</a>: {{ thread.title }}</h1>
@@ -9,13 +9,13 @@
         {% for comment in comments %}
             <tr>
                 <td class="b-thread-user">{{ comment.author.username }}<br>
-                    <div class="date">{{ comment.date_created|human_date }} {{ comment.date_created|human_time}}</div>
+                    <div class="date">{{ comment.date_created|ru_strftime:"%d %B" }} {{ comment.date_created|human_time}}</div>
                 </td>
                 <td>{{ comment.content }}</td>
             </tr>
         {% endfor  %}
     </table>
-    
+
     <hr>
     {% if user %}
         <form action="" method="POST">

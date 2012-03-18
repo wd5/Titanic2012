@@ -69,7 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django_russian',
+    'pytils',
     'south',
     'core',
     'forum',

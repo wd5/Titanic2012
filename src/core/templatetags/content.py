@@ -43,3 +43,8 @@ def br(text):
 def last_news():
     news = News.objects.all().order_by('-date_created')[:5]
     return {'news': news}
+
+
+@register.filter
+def human_time(time):
+    return u"%02d:%02d" % (time.hour, time.minute)

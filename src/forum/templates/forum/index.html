@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load content %}
-{% load russian %}
+{% load pytils_dt %}
 
 {% block content %}
     <h1>Форум</h1>
     <ul class="forum_threads">
         {% for thread in threads %}
             <li>
-                <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a> <small>{{ thread.last_comment_date|human_date }}</small>
+                <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a> <small>{{ thread.last_comment_date|ru_strftime:"%d %B" }}</small>
             </li>
         {% endfor %}
     </ul>
-    
+
     <hr>
     {% if user %}
         <h3>Новая тема:</h3>
