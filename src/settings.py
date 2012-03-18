@@ -4,13 +4,9 @@ import os
 
 APPEND_SLASH = False
 
-ADMINS = (
-    ('Glader', 'glader@glader.ru'),
-)
+ADMINS = (('Glader', 'glader.ru@gmail.com'),)
 
-MANAGERS = (
-    ('Shyti', 'linashyti@gmail.com'),
-)
+MANAGERS = (('Shyti', 'linashyti@gmail.com'),)
 
 SERVER_EMAIL = DEFAULT_FROM_EMAIL = 'glader.ru@gmail.com'
 
