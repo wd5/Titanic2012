@@ -3,10 +3,9 @@ from django.conf import settings
 from core.forms import LoginForm, RegistrationForm
 
 def default(request):
-    context = {'user': None, 
-               'request':request, 
-               'debug': settings.DEBUG, 
-               'DOMAIN': settings.DOMAIN,
+    context = {'user': None,
+               'request':request,
+               'debug': settings.DEBUG,
                'is_superuser': False,
                }
     if request.user.is_authenticated():
@@ -14,5 +13,5 @@ def default(request):
         context['profile'] = request.user.get_profile()
         if request.user.is_superuser:
             context['is_superuser'] = True
-    
+
     return context
