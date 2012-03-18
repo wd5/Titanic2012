@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo $(date) restarted >> /var/log/projects/titanic/restart.log
+exec chpst -u www /home/www/projects/titanic/ENV/bin/python /home/www/projects/titanic/src/manage.py runfcgi minspare=1 maxspare=1 errlog=/var/log/projects/titanic/fcgi-error.log method=prefork host=127.0.0.1 port=3029 pidfile=/home/www/projects/titanic/pid daemonize=false

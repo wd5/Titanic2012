@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load content %}
+{% load russian %}
+
+{% block content %}
+    <h1>Форум</h1>
+    <ul class="forum_threads">
+        {% for thread in threads %}
+            <li>
+                <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a> <small>{{ thread.last_comment_date|human_date }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <hr>
+    {% if user %}
+        <h3>Новая тема:</h3>
+        <form action="" method="POST">
+            {% csrf_token %}
+            Заголовок: {{ form.title }}<br>
+            Текст: {{ form.content }} &nbsp;
+            <input type="submit" value="Отправить">
+        </form>
+    {% else %}
+        <p>Если вы еще не регистрировались на сайте, заполните пожалуйста <a href="/form">анкету игрока</a>.</p>
+    {% endif %}
+
+{% endblock %}

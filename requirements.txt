@@ -1,0 +1,10 @@
+Django
+MySQL-python
+PIL
+South
+boto
+django-messages
+django-ses
+flup
+logging
+wsgiref

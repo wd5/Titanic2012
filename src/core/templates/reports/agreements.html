@@ -1,0 +1,19 @@
+{% extends "reports/base.html" %}
+
+{% block content %}
+    <h2>Соглашения</h2>
+    <table>
+        <tr><th>Игрок</th>
+            <th>Паспорт</th>
+            <th>Подпись</th>
+        </tr>
+
+        {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.name }}</td>
+                <td>{{ profile.passport_serial }} {{ profile.passport_number }}</td>
+                <td>&nbsp;</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

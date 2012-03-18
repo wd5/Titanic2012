@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load content %}
+
+{% block content %}
+    <h2>Оплата питания</h2>
+	<p>{{ page.content|safe|linebreaksbr }}</p>
+
+	{% if profile %}
+		<p>
+		{% if profile.food %}
+			Я передумал, я <a href="?food=off">не буду</a> оплачивать питание.
+		{% else %}
+			Я <a href="?food=on">хочу оплатить</a> питание на базе.
+		{% endif %}
+		</p>
+	{% endif %}
+
+    {% if profiles %}
+        <p>
+            {% for profile in profiles %}
+                {{ profile.name }}{% if not forloop.last%},{% endif %}
+            {% endfor %}
+            (итого: {{ profiles|length }}).
+        </p>
+    {% endif %}
+{% endblock %}

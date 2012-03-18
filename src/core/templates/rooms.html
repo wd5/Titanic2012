@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load content %}
+
+{% block content %}
+    <h2>Расселение</h2>
+    <!--<p><a href="{% url gallery 11 %}">Фотографии с базы</a>, <a href="http://cs10582.vk.com/u27829558/131724362/z_0158d15d.jpg">схема проезда</a>, <a href="http://g.co/maps/dpas2">база на карте</a>.</p>-->
+    <p>Уважаемые игроки.<br>
+        У нас сменилась база. Причина смены: один корпус (что больше соотвествует идеологии Титаника) и проблемы с канализацией на базе.<br>
+        База находится в 30 км по Тагильскому тракту. (Расстояние как до старой)<br>
+        Обязательно прочитайте <a href="/selen/" target="_blank">правила поведения на базе</a> - вам за них <a href="/agreement">расписываться</a>.</p>
+    <p>При расселении обращайте внимание, что большая цифра - количество мест в номере, буквенно-цифровой номер - номер каюты. Поселение по выбору доступно только игрокам, оплатившим взнос. Люксов на этой базе нет - так что те, кто доплачивал за люкс перенесли эти деньги на питание.</p>
+    {% if message %}
+        <p style="font-weight: bold">{{ message }}</p>
+    {% endif %}
+
+    {% if profile and profile.room %}
+        <p>Я забронировал комнату {{ profile.room.title }} на этаже {{ profile.room.floor.title }}.</p>
+    {% endif %}
+
+    <div style="float: left; padding-right: 5px;"><a href="http://img-fotki.yandex.ru/get/6102/16500.1/0_6a941_8d547709_orig"><img src="http://img-fotki.yandex.ru/get/6203/16500.1/0_6a942_eb4070d9_XL"></a></div>
+
+    {% for floor in floors %}
+        <p>
+            <h3>{{ floor.title }}</h3>
+
+            {% regroup floor.profiles by room.title as profiles_list %}
+
+            {% for group in profiles_list %}
+                {{ group.grouper }}: {% for profile in group.list %}{{ profile.role.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                {% if not forloop.last %}<br>{% endif %}
+            {% endfor %}
+
+            {% if can_reserve %}
+                <form action="" method="POST">
+                    Я хочу жить в комнате
+                    <select name="room">
+                        {% for room in floor.rooms %}
+                            <option value="{{ room.id }}">{{ room.title }} &nbsp;</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="Сохранить">
+                    </form>
+            {% endif %}
+            <br><br>
+        </p>
+        <hr>
+    {% endfor %}
+{% endblock %}
+
+{% block right_column %}
+{% endblock %}
