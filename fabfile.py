@@ -60,8 +60,8 @@ def production():
     upload()
     environment()
     local_settings()
-#    lighttpd()
- #   runit()
+    lighttpd()
+    runit()
     migrate()
     restart()
 
