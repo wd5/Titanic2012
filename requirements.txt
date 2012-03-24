@@ -9,5 +9,4 @@ flup
 logging
 wsgiref
 pytils
-feedparser
-https://bitbucket.org/redsnow/django-yafotki/get/4dd30f6114d5.zip
+-e git+https://github.com/glader/django_yafotki.git#egg=yafotki

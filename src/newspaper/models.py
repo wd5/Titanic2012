@@ -4,10 +4,6 @@ from django.core.urlresolvers import reverse
 
 from yafotki.fields import YFField
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^yafotki\.fields\.YFField"])
-
-
 class Post(models.Model):
     NEWSPAPER = (
         (1, u'The Times'),

@@ -2,7 +2,7 @@
 <div id="js-profile" class="js-tab-content">
     {% if profile_form.instance and profile_form.instance.portrait %}
         <div style="position: relative">
-            <div style="position: absolute; right:0;"><a href="{{ profile_form.instance.portrait.src }}" class="b-black-link"><img src="{% MEDIA_URL %}{{ profile_form.instance.portrait.src_150 }}"></a></div>
+            <div style="position: absolute; right:0;"><a href="{{ profile_form.instance.portrait.src }}" class="b-black-link"><img src="{{ profile_form.instance.portrait.src_150 }}"></a></div>
         </div>
     {% endif %}
 

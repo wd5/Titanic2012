@@ -4,9 +4,9 @@
 {% block content %}
     <h2>{{ gallery.title }}</h2>
     {% for photo in photos %}
-        <div style="float: left; margin-right: 10px;">
-            <div style="text-align: center">
-                <a href="{{ photo.image.url }}" class="b-black-link"><img src="{% MEDIA_URL %}{{ photo.image.get_thumbnail.0 }}"></a><br>
+        <div style="float: left; margin-right: 10px; margin-bottom: 30px; width: 300px; height: 300px;">
+            <div style="text-align: center;">
+                <a href="{{ photo.img.src }}" class="b-black-link"><img src="{{ photo.img.src_300 }}"></a><br>
                 {{ photo.title|default:"&nbsp;" }}
             </div>
         </div>

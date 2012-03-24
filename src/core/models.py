@@ -13,8 +13,6 @@ from yafotki.fields import YFField
 
 from south.modelsinspector import add_introspection_rules
 
-add_introspection_rules([], ["^yafotki\.fields\.YFField"])
-
 class ThumbnailImageFieldFile(models.fields.files.ImageFieldFile):
     def get_thumbnail(self):
         u""" Возвращает tuple (урл, (размеры))"""
