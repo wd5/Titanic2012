@@ -1,4 +1,4 @@
-Django
+Django==1.3.1
 MySQL-python
 PIL
 South
@@ -9,3 +9,5 @@ flup
 logging
 wsgiref
 pytils
+feedparser
+https://bitbucket.org/redsnow/django-yafotki/get/4dd30f6114d5.zip

@@ -9,9 +9,11 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
+from yafotki.fields import YFField
 
 from south.modelsinspector import add_introspection_rules
 
+add_introspection_rules([], ["^yafotki\.fields\.YFField"])
 
 class ThumbnailImageFieldFile(models.fields.files.ImageFieldFile):
     def get_thumbnail(self):
@@ -33,7 +35,6 @@ class ThumbnailImageFieldFile(models.fields.files.ImageFieldFile):
 
         file = os.path.join(settings.MEDIA_ROOT, self.name)
         if not os.path.exists(file):
-            open(settings.WARNING_LOG_PATH, 'a').write("file '%s' not found\n" % self.name)
             return "[file '%s' not found]" % self.name, (0, 0)
 
         if not os.path.exists(os.path.join(settings.THUMBNAIL_ROOT, thumbnail_dir)):
@@ -130,6 +131,11 @@ class Profile(models.Model):
     goal = models.TextField(verbose_name=u"Цель плавания в Америку")
     dream = models.TextField(verbose_name=u"Мечта", null=True, blank=True)
     photo = ThumbnailImageField(upload_to=lambda instance, filename:"data/%s.jpg" % instance.id, null=True, blank=True)
+    portrait = YFField(
+        verbose_name=u"Фото",
+        upload_to='titanic',
+        null=True, blank=True, default=None,
+    )
 
     role = models.ForeignKey(Role, verbose_name=u"Роль", null=True, blank=True, related_name="suggested_role")
     quest = models.TextField(verbose_name=u'Квента', null=True, blank=True, default=None)
@@ -342,6 +348,11 @@ class Photo(models.Model):
     gallery = models.ForeignKey(Gallery, verbose_name=u"Галерея")
     title = models.CharField(max_length=200, verbose_name=u"Название", null=True, blank=True, default=None)
     image = ThumbnailImageField(upload_to='data', null=True, blank=True)
+    img = YFField(
+        verbose_name=u"Фото",
+        upload_to='titanic',
+        null=True, blank=True, default=None,
+    )
 
     class Meta:
         verbose_name = u"Фотография"
@@ -379,7 +390,6 @@ class Dance(models.Model):
 
 class Floor(models.Model):
     title = models.CharField(max_length=200, verbose_name=u"Название", default=u"этаж")
-    scheme = models.ImageField(upload_to='i/floors', verbose_name=u"Схема")
     order = models.PositiveIntegerField(verbose_name=u"Порядок", default=10)
 
     def __unicode__(self): return self.title

@@ -1,33 +1,61 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 from fabric.api import *
-from fabric.contrib.files import exists, sed, upload_template
+from fabric.contrib.files import exists, append, upload_template
 
 from fab_settings import *
 
 env.hosts = ['ec2-107-21-102-210.compute-1.amazonaws.com']
 env.directory = '/home/www/projects/titanic'
 env.manage_dir = env.directory + '/src'
-env.deploy_user = 'www'
-env.user = 'www'
+env.deploy_user = env.user = 'www'
 env.activate = 'source %s/ENV/bin/activate' % env.directory
+
 
 def virtualenv(command):
     with cd(env.directory):
         run(env.activate + ' && ' + command)
 
 
-@hosts('ec2-107-21-102-210.compute-1.amazonaws.com')
 def init():
-    packages = ('lighttpd', 'mysql-server', 'mysql-client', 'build-dep', 'python-mysqldb',
-                'python-dev', 'runit', 'rrdtool', 'sendmail')
-    for package in packages:
-        sudo('apt-get install %s' % package)
+    env.deploy_user = env.user = 'ubuntu'
+
+    sudo('apt-get update')
+    sudo('apt-get install -y mc lighttpd mysql-client python-setuptools python-dev runit rrdtool memcached libjpeg62-dev')
+    sudo('apt-get build-dep -y python-mysqldb')
+
+    if not exists('/home/%s' % SSH_USER):
+        sudo('yes | adduser --disabled-password %s' % SSH_USER)
+        sudo('mkdir /home/%s/.ssh' % SSH_USER)
+        sudo('echo "%s" >> /home/%s/.ssh/authorized_keys' % (env.www_ssh_key, SSH_USER))
+
+    append('/etc/sudoers', '%s  ALL=(ALL) NOPASSWD:/usr/bin/sv' % SSH_USER, use_sudo=True)
+
+    if not exists('/var/log/projects/titanic'):
+        sudo('mkdir -p /var/log/projects/titanic')
+        sudo('chmod 777 /var/log/projects/titanic')
+
+    if not exists('/etc/lighttpd/conf-available/10-modules.conf'):
+        put('tools/lighttpd/10-modules.conf', '/etc/lighttpd/conf-available/10-modules.conf', use_sudo=True)
+        sudo('ln -s /etc/lighttpd/conf-available/10-modules.conf /etc/lighttpd/conf-enabled/10-modules.conf', shell=False)
+
+    if not exists('/etc/lighttpd/conf-available/90-titanic.conf'):
+        sudo('touch /etc/lighttpd/conf-available/90-titanic.conf')
+        sudo('chown %s /etc/lighttpd/conf-available/90-titanic.conf' % SSH_USER)
+    if not exists('/etc/lighttpd/conf-enabled/90-titanic.conf'):
+        sudo('ln -s /etc/lighttpd/conf-available/90-titanic.conf /etc/lighttpd/conf-enabled/90-titanic.conf', shell=False)
+
+    if not exists('/etc/sv/titanic'):
+        sudo('mkdir -p /etc/sv/titanic/supervise')
+        sudo('touch /etc/sv/titanic/run')
+        sudo('chown %s /etc/sv/titanic/run' % SSH_USER)
+        sudo('chmod 755 /etc/sv/titanic/run')
+        sudo('ln -s /etc/sv/titanic /etc/service/titanic', shell=False)
+
+    sudo('mkdir -p /home/%s/projects/titanic' % SSH_USER)
+    sudo('chown -R %(user)s:%(user)s /home/%(user)s' % {'user': SSH_USER})
 
 
-@hosts('ec2-107-21-102-210.compute-1.amazonaws.com')
 def production():
     upload()
     environment()
@@ -66,18 +94,12 @@ def local_settings():
 
 
 def lighttpd():
-    sudo('cp %(directory)s/tools/lighttpd/90-titanic.conf /etc/lighttpd/conf-available/90-titanic.conf' % env, shell=False)
-    if not exists('/etc/lighttpd/conf-enabled/90-titanic.conf'):
-        sudo('ln -s /etc/lighttpd/conf-available/90-titanic.conf /etc/lighttpd/conf-enabled/90-titanic.conf', shell=False)
+    run('cp %(directory)s/tools/lighttpd/90-titanic.conf /etc/lighttpd/conf-available/90-titanic.conf' % env, shell=False)
 #    sudo('/etc/init.d/lighttpd reload', shell=False)
 
 
 def runit():
-    sudo('cp %(directory)s/tools/runit/run /etc/sv/titanic/run' % env, shell=False)
-
-
-def dump():
-    pass
+    run('cp %(directory)s/tools/runit/run /etc/sv/titanic/run' % env, shell=False)
 
 
 def manage_py(command):
@@ -89,4 +111,10 @@ def migrate():
 
 
 def restart():
-    sudo('sv restart titanic')
+    run('sudo sv restart titanic')
+
+
+def local_env():
+    with settings(warn_only=True):
+        local('c:\\python\\python virtualenv.py ENV --system-site-packages')
+    local('ENV\\Scripts\\pip install -r requirements.txt ')
