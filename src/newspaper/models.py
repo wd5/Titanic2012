@@ -14,7 +14,6 @@ class Post(models.Model):
     newspaper = models.IntegerField(choices=NEWSPAPER, default=1, verbose_name=u"Газета")
     date_created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=200, verbose_name=u"Заголовок")
-    image = models.ImageField(upload_to='data', verbose_name=u"Картинка")
     img = YFField(
         verbose_name=u"Фото",
         upload_to='titanic',
