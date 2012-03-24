@@ -16,7 +16,6 @@ LOGIN_REDIRECT_URL = '/'
 AUTH_PROFILE_MODULE = 'core.Profile'
 
 PROJECT_PATH = os.path.dirname(__file__)
-data_images_path = os.path.join(PROJECT_PATH, 'media/data/')
 FORCE_SCRIPT_NAME = ""
 
 TIME_ZONE = 'Asia/Yekaterinburg'
@@ -74,11 +73,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
 )
-
-THUMBNAIL_ROOT = os.path.join(MEDIA_ROOT, 'data/thumbnails')
-THUMBNAIL_URL = 'data/thumbnails/'
-THUMBNAIL_SIZE = 500, 200
-
 
 LOG_PATH = '/var/log/projects/titanic'
 
