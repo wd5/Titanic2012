@@ -184,6 +184,8 @@ def gallery(request, gallery_id):
     return render_to_response(request, 'gallery.html', {'gallery': get_object_or_404(Gallery, pk=gallery_id),
                                                         'photos': Photo.objects.filter(gallery=gallery_id),
                                                         })
+
+
 def bus(request):
     if request.user.is_authenticated() and request.GET:
         profile = request.user.get_profile()
