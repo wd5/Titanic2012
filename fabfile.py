@@ -5,11 +5,13 @@ from fabric.contrib.files import exists, append, upload_template
 
 from fab_settings import *
 
-env.hosts = ['ec2-107-21-102-210.compute-1.amazonaws.com']
-env.directory = '/home/www/projects/titanic'
+env.ami = 'ami-8f03ede6'
+env.directory = '/home/%s/projects/titanic' % SSH_USER
 env.manage_dir = env.directory + '/src'
-env.deploy_user = env.user = 'www'
+env.deploy_user = env.user = SSH_USER
 env.activate = 'source %s/ENV/bin/activate' % env.directory
+if not env.hosts:
+    env.hosts = ['ec2-107-21-102-210.compute-1.amazonaws.com']
 
 
 def virtualenv(command):
