@@ -222,8 +222,8 @@ class RoleConnection(models.Model):
                     profile = Profile.objects.filter(role=self.role)[0]
 
                 send_mail(u"Титаник 2012: новая связь между ролями",
-                    "Анкета: http://titanic2012.ru/form?change_user=%s\n\n%s -> %s"
-                    % (profile.user.pk, self.role, self.role_rel),
+                    "Анкета: http://titanic2012.ru/form?change_user=%s\n\n%s -> %s\n\n%s"
+                    % (profile.user.pk, self.role, self.role_rel, self.comment),
                     settings.SERVER_EMAIL,
                     emails,
                 )
@@ -269,7 +269,7 @@ class LayerConnection(models.Model):
                                 )
             else:
                 send_mail(u"Титаник 2012: новый пласт роли",
-                    "%s -> %s" % (self.role, self.layer),
+                    "%s -> %s\n\n%s" % (self.role, self.layer, self.comment),
                     settings.SERVER_EMAIL,
                     emails,
                 )
