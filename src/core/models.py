@@ -164,7 +164,7 @@ class Profile(models.Model):
 
 
     def save(self, check_diff=True, *args, **kwargs):
-        if self.pk and check_diff and not settings.DEBUG:
+        if self.pk and check_diff:
             prev = self.__class__.objects.get(pk=self.pk)
             report = ""
             for field in self._meta.fields:
@@ -177,6 +177,7 @@ class Profile(models.Model):
             if report:
                 report = u"Измененные поля профиля [http://titanic2012.ru/form?change_user=%s]:\n" % self.user.pk + report
                 emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1], self.user.email]
+                print emails
 
                 send_mail(u"Титаник 2012: изменения в профиле игрока %s" % self.name,
                             report,
@@ -198,35 +199,34 @@ class RoleConnection(models.Model):
     is_locked = models.BooleanField(verbose_name=u"Заморожено", default=False)
 
     def save(self, *args, **kwargs):
-        if not settings.DEBUG:
-            emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1]]
+        emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1]]
+        if self.role.profile:
+            emails.append(self.role.profile.user.email)
+
+        if self.pk:
+            prev = self.__class__.objects.get(pk=self.pk)
+            if getattr(self, 'comment') != getattr(prev, 'comment'):
+                report = u"Анкета: http://titanic2012.ru/form?change_user=%s\n\nИзмененная связь: %s -> %s:\nБыло: %s\nСтало: '%s'" % \
+                         (self.role.profile.user.pk, self.role,
+                          self.role_rel, getattr(prev,'comment') or '-', getattr(self, 'comment') or '-')
+
+                send_mail(u"Титаник 2012: изменения в связях роли %s" % self.role,
+                            report,
+                            settings.SERVER_EMAIL,
+                            emails,
+                            )
+        else:
             if self.role.profile:
-                emails.append(self.role.profile.user.email)
-
-            if self.pk:
-                prev = self.__class__.objects.get(pk=self.pk)
-                if getattr(self, 'comment') != getattr(prev, 'comment'):
-                    report = u"Анкета: http://titanic2012.ru/form?change_user=%s\n\nИзмененная связь: %s -> %s:\nБыло: %s\nСтало: '%s'" % \
-                             (self.role.profile.user.pk, self.role,
-                              self.role_rel, getattr(prev,'comment') or '-', getattr(self, 'comment') or '-')
-
-                    send_mail(u"Титаник 2012: изменения в связях роли %s" % self.role,
-                                report,
-                                settings.SERVER_EMAIL,
-                                emails,
-                                )
+                profile = self.role.profile
             else:
-                if self.role.profile:
-                    profile = self.role.profile
-                else:
-                    profile = Profile.objects.filter(role=self.role)[0]
+                profile = Profile.objects.filter(role=self.role)[0]
 
-                send_mail(u"Титаник 2012: новая связь между ролями",
-                    "Анкета: http://titanic2012.ru/form?change_user=%s\n\n%s -> %s\n\n%s"
-                    % (profile.user.pk, self.role, self.role_rel, self.comment),
-                    settings.SERVER_EMAIL,
-                    emails,
-                )
+            send_mail(u"Титаник 2012: новая связь между ролями",
+                u"Анкета: http://titanic2012.ru/form?change_user=%s\n\n%s -> %s\n\n%s"
+                % (profile.user.pk, self.role, self.role_rel, self.comment),
+                settings.SERVER_EMAIL,
+                emails,
+            )
 
         return super(RoleConnection, self).save(*args, **kwargs)
 
@@ -252,27 +252,26 @@ class LayerConnection(models.Model):
     is_locked = models.BooleanField(verbose_name=u"Заморожено", default=False)
 
     def save(self, *args, **kwargs):
-        if not settings.DEBUG:
-            emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1]]
-            if self.role.profile:
-                emails.append(self.role.profile.user.email)
+        emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1]]
+        if self.role.profile:
+            emails.append(self.role.profile.user.email)
 
-            if self.pk:
-                prev = self.__class__.objects.get(pk=self.pk)
-                if getattr(self, 'comment') != getattr(prev, 'comment'):
-                    report = u"Измененный пласт: %s -> %s:\nБыло: %s\nСтало: '%s'" % (self.role, self.layer, getattr(prev,'comment') or '-', getattr(self, 'comment') or '-')
+        if self.pk:
+            prev = self.__class__.objects.get(pk=self.pk)
+            if getattr(self, 'comment') != getattr(prev, 'comment'):
+                report = u"Измененный пласт: %s -> %s:\nБыло: %s\nСтало: '%s'" % (self.role, self.layer, getattr(prev,'comment') or '-', getattr(self, 'comment') or '-')
 
-                    send_mail(u"Титаник 2012: изменения в пласте роли %s" % self.role,
-                                report,
-                                settings.SERVER_EMAIL,
-                                emails,
-                                )
-            else:
-                send_mail(u"Титаник 2012: новый пласт роли",
-                    "%s -> %s\n\n%s" % (self.role, self.layer, self.comment),
-                    settings.SERVER_EMAIL,
-                    emails,
-                )
+                send_mail(u"Титаник 2012: изменения в пласте роли %s" % self.role,
+                            report,
+                            settings.SERVER_EMAIL,
+                            emails,
+                            )
+        else:
+            send_mail(u"Титаник 2012: новый пласт роли",
+                u"%s -> %s\n\n%s" % (self.role, self.layer, self.comment),
+                settings.SERVER_EMAIL,
+                emails,
+            )
 
         return super(LayerConnection, self).save(*args, **kwargs)
 
