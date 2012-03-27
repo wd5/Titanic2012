@@ -100,9 +100,9 @@ def request_form(request, current_user):
 
 
         if profile:
-            context['profile_form'] = ProfileForm(request.POST, request.FILES, instance=profile)
+            context['profile_form'] = ProfileForm(request.POST, request.FILES, instance=profile, admin=request.user.is_superuser)
             if context['profile_form'].is_valid():
-                context['profile_form'].save(admin=request.user.is_superuser)
+                context['profile_form'].save()
 
                 if profile.role and request.POST.get('roles-TOTAL_FORMS'):
                     context['connections_formset'] = ConnectionFormSet(request.POST, instance=profile.role)
@@ -119,16 +119,16 @@ def request_form(request, current_user):
                 if settings.DEBUG:
                     print context['profile_form'].str_errors()
         else:
-            context['profile_form'] = ProfileForm(request.POST)
+            context['profile_form'] = ProfileForm(request.POST, admin=request.user.is_superuser)
 
     else:
         if request.user and request.user.is_authenticated():
-            context['profile_form'] = ProfileForm(instance=current_user.get_profile())
+            context['profile_form'] = ProfileForm(instance=current_user.get_profile(), admin=request.user.is_superuser)
             role = current_user.get_profile().role
             context['connections_formset'] = ConnectionFormSet(instance=role, queryset=RoleConnection.objects.filter(role=role, is_locked=False))
             context['layers_formset'] = LayerFormSet(instance=role, queryset=LayerConnection.objects.filter(role=role, is_locked=False))
         else:
-            context['profile_form'] = ProfileForm()
+            context['profile_form'] = ProfileForm(admin=request.user.is_superuser)
             context['reg_form'] = RegistrationForm()
 
     return render_to_response(request, 'form.html', context)

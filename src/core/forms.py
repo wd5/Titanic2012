@@ -77,8 +77,11 @@ class ProfileForm(ModelForm):
     role_profession = CharField(label=u'Профессия персонажа', required=False, max_length=200, widget=TextInput(attrs={'size':'40'}))
 
     def __init__(self, *args, **kwargs):
+        admin = kwargs.pop("admin")
         super(ProfileForm, self).__init__(*args, **kwargs)
         #print "START", ",".join(self.fields.keys())
+
+        self.admin = admin
 
         self.roles = list(Role.objects.filter(profile__isnull=True).order_by('cabin', 'order'))
 
@@ -100,6 +103,9 @@ class ProfileForm(ModelForm):
             for field in self.fields.keys():
                 if kwargs['instance'].is_locked(field):
                     del self.fields[field]
+
+            if not self.admin:
+                del self.fields['special']
 
         if 'role' in self.fields:
             self.fields['role'].widget.choices = [(role.pk, u"[%s] %s, %s, %s, %s лет" % (role.get_ticket_level_display(), role.name,
@@ -149,7 +155,7 @@ class ProfileForm(ModelForm):
     def str_errors(self, divider=u" "):
         return divider.join(self.errors_list())
 
-    def save(self, admin=False, *args, **kwargs):
+    def save(self, *args, **kwargs):
         if self.instance.pk:
             old_room = Profile.objects.get(pk=self.instance.pk).room_id
         else:
@@ -157,7 +163,7 @@ class ProfileForm(ModelForm):
 
         instance = super(ProfileForm, self).save(*args, **kwargs)
 
-        if not (instance.paid or admin):
+        if not (instance.paid or self.admin):
             instance.room_id = old_room
             instance.save()
             Room.recalc()

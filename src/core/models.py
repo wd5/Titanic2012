@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from hashlib import md5
-import os
-import Image
+
 from datetime import datetime
 
 from django.contrib.auth.models import User
@@ -177,7 +175,6 @@ class Profile(models.Model):
             if report:
                 report = u"Измененные поля профиля [http://titanic2012.ru/form?change_user=%s]:\n" % self.user.pk + report
                 emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1], self.user.email]
-                print emails
 
                 send_mail(u"Титаник 2012: изменения в профиле игрока %s" % self.name,
                             report,
