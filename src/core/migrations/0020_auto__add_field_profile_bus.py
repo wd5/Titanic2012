@@ -4,19 +4,18 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Profile.bus'
         db.add_column('core_profile', 'bus', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
 
-
     def backwards(self, orm):
-        
+
         # Deleting field 'Profile.bus'
         db.delete_column('core_profile', 'bus')
-
 
     models = {
         'auth.group': {

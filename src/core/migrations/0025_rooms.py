@@ -4,19 +4,20 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
+
 class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
 
         floors = (
-            (3, (('A1', 3),('A2', 3),('A3', 2),('A4', 4),('B1', 2),('B2', 2),('B3', 2),('B4', 2),('B5', 2))),
-            (4, (('A5', 3),('A6', 2),('A7', 3),('A8', 2),('A9', 2),('A10', 2),
-                 ('B6', 2),('B7', 2),('B8', 2),('B9', 2),('B10', 2),('B11', 2),('B12', 2),('B13', 2))),
-            (1, (('С1', 2),('С2', 2),('С3', 2),('С4', 2),('С5', 2),('С6', 5))),
-            (2, (('С7', 2),('С8', 2),(u'С9-лазарет', 2),('С10', 2),(u'рубка', 2),
-                 ('D1', 3),('D2', 4),('D3', 3),
-                 (u'машинное отделение',2),('E1',3),('E2',4),('E3',4),('E4',4),('E5',5),('E6',6))),
+            (3, (('A1', 3), ('A2', 3), ('A3', 2), ('A4', 4), ('B1', 2), ('B2', 2), ('B3', 2), ('B4', 2), ('B5', 2))),
+            (4, (('A5', 3), ('A6', 2), ('A7', 3), ('A8', 2), ('A9', 2), ('A10', 2),
+                 ('B6', 2), ('B7', 2), ('B8', 2), ('B9', 2), ('B10', 2), ('B11', 2), ('B12', 2), ('B13', 2))),
+            (1, (('С1', 2), ('С2', 2), ('С3', 2), ('С4', 2), ('С5', 2), ('С6', 5))),
+            (2, (('С7', 2), ('С8', 2), (u'С9-лазарет', 2), ('С10', 2), (u'рубка', 2),
+                 ('D1', 3), ('D2', 4), ('D3', 3),
+                 (u'машинное отделение', 2), ('E1', 3), ('E2', 4), ('E3', 4), ('E4', 4), ('E5', 5), ('E6', 6))),
         )
 
         for floor_data in floors:
@@ -24,10 +25,8 @@ class Migration(DataMigration):
             for room_data in floor_data[1]:
                 orm.Room.objects.create(floor=floor, title=room_data[0], capacity=room_data[1], current=0)
 
-
     def backwards(self, orm):
         "Write your backwards methods here."
-
 
     models = {
         'auth.group': {

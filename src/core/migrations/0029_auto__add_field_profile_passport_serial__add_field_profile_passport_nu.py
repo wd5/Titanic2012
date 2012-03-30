@@ -4,10 +4,11 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Profile.passport_serial'
         db.add_column('core_profile', 'passport_serial', self.gf('django.db.models.fields.IntegerField')(default=None, null=True, blank=True), keep_default=False)
 
@@ -20,9 +21,8 @@ class Migration(SchemaMigration):
         # Adding field 'Profile.agreement'
         db.add_column('core_profile', 'agreement', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
 
-
     def backwards(self, orm):
-        
+
         # Deleting field 'Profile.passport_serial'
         db.delete_column('core_profile', 'passport_serial')
 
@@ -34,7 +34,6 @@ class Migration(SchemaMigration):
 
         # Deleting field 'Profile.agreement'
         db.delete_column('core_profile', 'agreement')
-
 
     models = {
         'auth.group': {

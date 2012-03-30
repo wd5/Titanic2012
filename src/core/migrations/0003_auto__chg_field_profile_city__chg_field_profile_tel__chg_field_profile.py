@@ -4,10 +4,11 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Changing field 'Profile.city'
         db.alter_column('core_profile', 'city', self.gf('django.db.models.fields.CharField')(max_length=200, null=True))
 
@@ -26,9 +27,8 @@ class Migration(SchemaMigration):
         # Changing field 'Profile.user'
         db.alter_column('core_profile', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True))
 
-
     def backwards(self, orm):
-        
+
         # Changing field 'Profile.city'
         db.alter_column('core_profile', 'city', self.gf('django.db.models.fields.CharField')(default='', max_length=200))
 
@@ -46,7 +46,6 @@ class Migration(SchemaMigration):
 
         # Changing field 'Profile.user'
         db.alter_column('core_profile', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(default='', to=orm['auth.User']))
-
 
     models = {
         'auth.group': {

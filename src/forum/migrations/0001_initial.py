@@ -4,10 +4,11 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'Thread'
         db.create_table('forum_thread', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -28,15 +29,13 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('forum', ['Comment'])
 
-
     def backwards(self, orm):
-        
+
         # Deleting model 'Thread'
         db.delete_table('forum_thread')
 
         # Deleting model 'Comment'
         db.delete_table('forum_comment')
-
 
     models = {
         'auth.group': {

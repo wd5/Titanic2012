@@ -4,6 +4,7 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
+
 class Migration(DataMigration):
 
     def forwards(self, orm):
@@ -38,11 +39,8 @@ class Migration(DataMigration):
         for image in images:
             orm.Post.objects.filter(pk=image[0]).update(img=image[1])
 
-
-
     def backwards(self, orm):
         "Write your backwards methods here."
-
 
     models = {
         'newspaper.post': {

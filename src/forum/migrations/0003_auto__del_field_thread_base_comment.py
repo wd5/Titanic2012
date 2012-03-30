@@ -4,19 +4,18 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Deleting field 'Thread.base_comment'
         db.delete_column('forum_thread', 'base_comment_id')
 
-
     def backwards(self, orm):
-        
+
         # Adding field 'Thread.base_comment'
         db.add_column('forum_thread', 'base_comment', self.gf('django.db.models.fields.related.ForeignKey')(related_name='base_comment', null=True, to=orm['forum.Comment'], blank=True), keep_default=False)
-
 
     models = {
         'auth.group': {

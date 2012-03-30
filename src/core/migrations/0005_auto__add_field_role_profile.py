@@ -4,19 +4,18 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Role.profile'
         db.add_column('core_role', 'profile', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='locked_role', null=True, to=orm['core.Profile']), keep_default=False)
 
-
     def backwards(self, orm):
-        
+
         # Deleting field 'Role.profile'
         db.delete_column('core_role', 'profile_id')
-
 
     models = {
         'auth.group': {

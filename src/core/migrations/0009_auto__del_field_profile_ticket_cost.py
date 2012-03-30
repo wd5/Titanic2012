@@ -4,19 +4,18 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Deleting field 'Profile.ticket_cost'
         db.delete_column('core_profile', 'ticket_cost')
 
-
     def backwards(self, orm):
-        
+
         # Adding field 'Profile.ticket_cost'
         db.add_column('core_profile', 'ticket_cost', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
-
 
     models = {
         'auth.group': {

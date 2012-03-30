@@ -8,6 +8,7 @@ from core.models import RoleConnection, News
 
 register = template.Library()
 
+
 @register.simple_tag
 def MEDIA_URL():
     return settings.MEDIA_URL

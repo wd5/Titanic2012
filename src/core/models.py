@@ -10,18 +10,19 @@ from django.core.mail import send_mail
 from yafotki.fields import YFField
 
 
-class GenericManager( models.Manager ):
+class GenericManager(models.Manager):
     """
     Filters query set with given selectors
     """
     def __init__(self, **kwargs):
-        super( GenericManager, self ).__init__()
+        super(GenericManager, self).__init__()
         self.selectors = kwargs
 
     def get_query_set(self):
-        return super( GenericManager, self ).get_query_set().filter( **self.selectors )
+        return super(GenericManager, self).get_query_set().filter(**self.selectors)
 
-TICKET_COST = {1:0, 2:16000, 3:0, 4:600, 5:120}
+TICKET_COST = {1: 0, 2: 16000, 3: 0, 4: 600, 5: 120}
+
 
 class Role(models.Model):
     TICKET_LEVEL = (
@@ -47,7 +48,8 @@ class Role(models.Model):
     cabin = models.IntegerField(verbose_name=u"Каюта", default=100)
     profile = models.ForeignKey('Profile', verbose_name=u'Профиль', null=True, blank=True, related_name="locked_role")
 
-    def __unicode__(self): return self.name
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         verbose_name = u"Роль"
@@ -96,7 +98,8 @@ class Profile(models.Model):
 
     locked_fields = models.CharField(max_length="300", verbose_name=u"Замороженные поля", null=True, blank=True)
 
-    def __unicode__(self): return self.user.username
+    def __unicode__(self):
+        return self.user.username
 
     def form_link(self):
         return "<a href='" + reverse('form') + '?change_user=%s' % self.user.id + "'>анкета</a>"
@@ -146,7 +149,6 @@ class Profile(models.Model):
                 self.role.profile = None
                 self.role.save()
 
-
     @property
     def ticket_cost(self):
         return self.role and TICKET_COST[self.role.ticket_level] or 0
@@ -154,12 +156,11 @@ class Profile(models.Model):
     @property
     def money_check(self):
         return self.money_total - self.ticket_cost - self.money_cafe - \
-               self.money_casino - self.wsl_actions*3 - self.gl_actions*5 - self.money_cache
+               self.money_casino - self.wsl_actions * 3 - self.gl_actions * 5 - self.money_cache
 
     @property
     def money_check_pounds(self):
         return self.money_check / 20
-
 
     def save(self, check_diff=True, *args, **kwargs):
         if self.pk and check_diff:
@@ -205,7 +206,7 @@ class RoleConnection(models.Model):
             if getattr(self, 'comment') != getattr(prev, 'comment'):
                 report = u"Анкета: http://titanic2012.ru/form?change_user=%s\n\nИзмененная связь: %s -> %s:\nБыло: %s\nСтало: '%s'" % \
                          (self.role.profile.user.pk, self.role,
-                          self.role_rel, getattr(prev,'comment') or '-', getattr(self, 'comment') or '-')
+                          self.role_rel, getattr(prev, 'comment') or '-', getattr(self, 'comment') or '-')
 
                 send_mail(u"Титаник 2012: изменения в связях роли %s" % self.role,
                             report,
@@ -235,7 +236,8 @@ class RoleConnection(models.Model):
 class Layer(models.Model):
     title = models.CharField(verbose_name=u"Название", max_length=200)
 
-    def __unicode__(self): return self.title
+    def __unicode__(self):
+        return self.title
 
     class Meta:
         verbose_name = u"Пласт"
@@ -256,7 +258,7 @@ class LayerConnection(models.Model):
         if self.pk:
             prev = self.__class__.objects.get(pk=self.pk)
             if getattr(self, 'comment') != getattr(prev, 'comment'):
-                report = u"Измененный пласт: %s -> %s:\nБыло: %s\nСтало: '%s'" % (self.role, self.layer, getattr(prev,'comment') or '-', getattr(self, 'comment') or '-')
+                report = u"Измененный пласт: %s -> %s:\nБыло: %s\nСтало: '%s'" % (self.role, self.layer, getattr(prev, 'comment') or '-', getattr(self, 'comment') or '-')
 
                 send_mail(u"Титаник 2012: изменения в пласте роли %s" % self.role,
                             report,
@@ -332,7 +334,8 @@ class Floor(models.Model):
     title = models.CharField(max_length=200, verbose_name=u"Название", default=u"этаж")
     order = models.PositiveIntegerField(verbose_name=u"Порядок", default=10)
 
-    def __unicode__(self): return self.title
+    def __unicode__(self):
+        return self.title
 
     class Meta:
         verbose_name = u"Этаж"
@@ -346,7 +349,8 @@ class Room(models.Model):
     capacity = models.PositiveIntegerField(verbose_name=u"Вместимость", default=2)
     current = models.PositiveIntegerField(verbose_name=u"Наполненность", default=0)
 
-    def __unicode__(self): return self.title
+    def __unicode__(self):
+        return self.title
 
     @property
     def available(self):
@@ -369,8 +373,10 @@ class Room(models.Model):
 
 from south.modelsinspector import add_introspection_rules
 
+
 class ThumbnailImageFieldFile(models.fields.files.ImageFieldFile):
     pass
+
 
 class ThumbnailImageField(models.ImageField):
     attr_class = ThumbnailImageFieldFile
@@ -379,6 +385,6 @@ rules = [(
     (ThumbnailImageField, ),
     [],
         {},
-    ),]
+    ), ]
 
-add_introspection_rules(rules, ["^core",])
+add_introspection_rules(rules, ["^core", ])

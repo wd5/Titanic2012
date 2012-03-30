@@ -4,6 +4,7 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
+
 class Migration(DataMigration):
 
     def forwards(self, orm):
@@ -12,10 +13,8 @@ class Migration(DataMigration):
         for title in (u"Экономика", u"Шпионаж", u"Социальное", u"Криминал"):
             orm.Layer.objects.create(title=title)
 
-
     def backwards(self, orm):
         "Write your backwards methods here."
-
 
     models = {
         'auth.group': {

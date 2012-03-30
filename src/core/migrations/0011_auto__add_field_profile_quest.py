@@ -4,19 +4,18 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Profile.quest'
         db.add_column('core_profile', 'quest', self.gf('django.db.models.fields.TextField')(default=None, null=True, blank=True), keep_default=False)
 
-
     def backwards(self, orm):
-        
+
         # Deleting field 'Profile.quest'
         db.delete_column('core_profile', 'quest')
-
 
     models = {
         'auth.group': {

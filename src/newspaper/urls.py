@@ -3,6 +3,6 @@ from django.conf.urls.defaults import *
 
 from newspaper.views import newspaper
 
-urlpatterns = patterns('',       
+urlpatterns = patterns('',
     url(r'^(?P<newspaper_id>\d+)/$', newspaper, name='newspaper'),
     )

@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 from yafotki.fields import YFField
 
+
 class Post(models.Model):
     NEWSPAPER = (
         (1, u'The Times'),

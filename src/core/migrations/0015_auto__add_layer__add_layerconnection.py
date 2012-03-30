@@ -4,10 +4,11 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'Layer'
         db.create_table('core_layer', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -25,15 +26,13 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('core', ['LayerConnection'])
 
-
     def backwards(self, orm):
-        
+
         # Deleting model 'Layer'
         db.delete_table('core_layer')
 
         # Deleting model 'LayerConnection'
         db.delete_table('core_layerconnection')
-
 
     models = {
         'auth.group': {

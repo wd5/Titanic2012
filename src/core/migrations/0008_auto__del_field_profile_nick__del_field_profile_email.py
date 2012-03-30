@@ -4,25 +4,24 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Deleting field 'Profile.nick'
         db.delete_column('core_profile', 'nick')
 
         # Deleting field 'Profile.email'
         db.delete_column('core_profile', 'email')
 
-
     def backwards(self, orm):
-        
+
         # Adding field 'Profile.nick'
         db.add_column('core_profile', 'nick', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True), keep_default=False)
 
         # Adding field 'Profile.email'
         db.add_column('core_profile', 'email', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True), keep_default=False)
-
 
     models = {
         'auth.group': {

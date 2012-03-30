@@ -28,7 +28,6 @@ class Migration(SchemaMigration):
         # Deleting field 'Profile.portrait'
         db.delete_column('core_profile', 'portrait')
 
-
         # User chose to not deal with backwards NULL issues for 'Floor.scheme'
         raise RuntimeError("Cannot reverse this migration. 'Floor.scheme' and its values cannot be restored.")
     models = {

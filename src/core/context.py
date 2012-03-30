@@ -2,9 +2,10 @@
 from django.conf import settings
 from core.forms import LoginForm, RegistrationForm
 
+
 def default(request):
     context = {'user': None,
-               'request':request,
+               'request': request,
                'debug': settings.DEBUG,
                'is_superuser': False,
                }

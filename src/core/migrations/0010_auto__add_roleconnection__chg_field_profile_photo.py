@@ -4,10 +4,11 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'RoleConnection'
         db.create_table('core_roleconnection', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -21,15 +22,13 @@ class Migration(SchemaMigration):
         # Changing field 'Profile.photo'
         db.alter_column('core_profile', 'photo', self.gf('core.models.ThumbnailImageField')(max_length=100, null=True))
 
-
     def backwards(self, orm):
-        
+
         # Deleting model 'RoleConnection'
         db.delete_table('core_roleconnection')
 
         # Changing field 'Profile.photo'
         db.alter_column('core_profile', 'photo', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True))
-
 
     models = {
         'auth.group': {

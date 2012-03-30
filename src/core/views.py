@@ -13,6 +13,7 @@ from django.contrib.flatpages.views import flatpage
 
 from forms import *
 
+
 def render_to_response(request, template_name, context_dict=None):
     from django.shortcuts import render_to_response as _render_to_response
     context = RequestContext(request, context_dict or {})
@@ -35,8 +36,8 @@ def roles(request):
                 role.first = True
             prev_cabin = role.cabin
 
-    return render_to_response(request, 'roles.html', {'levels':levels,
-                                                      'roles':roles,
+    return render_to_response(request, 'roles.html', {'levels': levels,
+                                                      'roles': roles,
                                                       'current_level': current_level,
                                                       })
 
@@ -98,7 +99,6 @@ def request_form(request, current_user):
                         del context['reg_form']
                         current_user = request.user
 
-
         if profile:
             context['profile_form'] = ProfileForm(request.POST, request.FILES, instance=profile, admin=request.user.is_superuser)
             if context['profile_form'].is_valid():
@@ -143,11 +143,11 @@ def lock(request, current_user):
 
     if request.GET.get('action') == 'lock':
         profile.lock(request.GET.get('field'))
-        return HttpResponse(simplejson.dumps({'success':True}))
+        return HttpResponse(simplejson.dumps({'success': True}))
 
     elif request.GET.get('action') == 'unlock':
         profile.unlock(request.GET.get('field'))
-        return HttpResponse(simplejson.dumps({'success':True}))
+        return HttpResponse(simplejson.dumps({'success': True}))
 
     raise Http404
 
@@ -163,7 +163,7 @@ def lock_rel(request, current_user):
     if request.GET.get('action') == 'lock':
         connection.is_locked = True
         connection.save()
-        return HttpResponse(simplejson.dumps({'success':True}))
+        return HttpResponse(simplejson.dumps({'success': True}))
 
     elif request.GET.get('action') == 'unlock':
         connection.is_locked = False
@@ -283,19 +283,22 @@ def agreement(request, current_user):
 ############################################################################
 # Reports
 
+
 @permission_required('add_user')
 def reports(request):
     return render_to_response(request, 'reports/index.html',
-                              {'emails':", ".join(user.email for user in User.objects.all()),
+                              {'emails': ", ".join(user.email for user in User.objects.all()),
                                'profiles': Profile.objects.all().order_by('role__ticket_level'),
                                'locked_roles_amount': Role.objects.filter(profile__isnull=False).count(),
                               })
 
+
 @permission_required('add_user')
 def report_actions(request):
     return render_to_response(request, 'reports/actions.html',
-                          {'profiles': Profile.objects.filter(Q(wsl_actions__gt=0)|Q(gl_actions__gt=0))}
+                          {'profiles': Profile.objects.filter(Q(wsl_actions__gt=0) | Q(gl_actions__gt=0))}
                           )
+
 
 @permission_required('add_user')
 def report_money(request):
@@ -317,6 +320,7 @@ def report_paid(request):
                           {'profiles': Profile.objects.all().order_by('-paid', 'name')}
                           )
 
+
 @permission_required('add_user')
 def report_layers(request):
     return render_to_response(request, 'reports/layers.html',
@@ -329,6 +333,7 @@ def report_players_without_roles(request):
     return render_to_response(request, 'reports/players_without_roles.html',
                           {'profiles': Profile.objects.exclude(locked_fields__contains='role').order_by('name')}
                           )
+
 
 @permission_required('add_user')
 def report_agreements(request):

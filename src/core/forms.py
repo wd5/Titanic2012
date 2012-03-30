@@ -5,6 +5,7 @@ from django.db.models import Q
 
 from models import *
 
+
 class CommonForm(Form):
     def errors_list(self):
         return [u"%s: %s" % (self.fields[_].label, message) for _, l in self.errors.items() for message in l]
@@ -35,7 +36,7 @@ class LoginForm(CommonForm):
 
     def get_user(self, s):
         u""" Проверяет строку на емейл, логин или имя пользователя """
-        return User.objects.get(Q(username=s)|Q(email=s)|Q(first_name=s))
+        return User.objects.get(Q(username=s) | Q(email=s) | Q(first_name=s))
 
     def clean(self):
         login = self.cleaned_data.get('login', '')
@@ -62,19 +63,19 @@ class ProfileForm(ModelForm):
             'social_number', 'agreement',
             )
 
-    name = CharField(label=u'ФИО персонажа', max_length=200, widget=TextInput(attrs={'size':'60'}), required=False)
-    med  = CharField(label=u'Мед. показатели', max_length=200, widget=TextInput(attrs={'size':'60'}), required=False)
-    gun  = CharField(label=u'Оружие', max_length=200, widget=TextInput(attrs={'size':'40'}), required=False)
-    goal = CharField(label=u'Цель', max_length=200, widget=Textarea(attrs={'rows':'4', 'cols':'40'}))
-    dream = CharField(label=u'Мечта', max_length=200, widget=Textarea(attrs={'rows':'4', 'cols':'40'}), required=False)
-    quest = CharField(label=u'Квента', max_length=20000, widget=Textarea(attrs={'rows':'15', 'cols':'100'}), required=False)
+    name = CharField(label=u'ФИО персонажа', max_length=200, widget=TextInput(attrs={'size': '60'}), required=False)
+    med = CharField(label=u'Мед. показатели', max_length=200, widget=TextInput(attrs={'size': '60'}), required=False)
+    gun = CharField(label=u'Оружие', max_length=200, widget=TextInput(attrs={'size': '40'}), required=False)
+    goal = CharField(label=u'Цель', max_length=200, widget=Textarea(attrs={'rows': '4', 'cols': '40'}))
+    dream = CharField(label=u'Мечта', max_length=200, widget=Textarea(attrs={'rows': '4', 'cols': '40'}), required=False)
+    quest = CharField(label=u'Квента', max_length=20000, widget=Textarea(attrs={'rows': '15', 'cols': '100'}), required=False)
 
     role = IntegerField(label=u'Роль', widget=Select)
 
     role_ticket = CharField(label=u'Класс билета', required=False, widget=Select)
-    role_name = CharField(label=u'Имя персонажа', required=False, max_length=200, widget=TextInput(attrs={'size':'40'}))
+    role_name = CharField(label=u'Имя персонажа', required=False, max_length=200, widget=TextInput(attrs={'size': '40'}))
     role_age = IntegerField(label=u'Возраст персонажа', required=False)
-    role_profession = CharField(label=u'Профессия персонажа', required=False, max_length=200, widget=TextInput(attrs={'size':'40'}))
+    role_profession = CharField(label=u'Профессия персонажа', required=False, max_length=200, widget=TextInput(attrs={'size': '40'}))
 
     def __init__(self, *args, **kwargs):
         admin = kwargs.pop("admin")
@@ -116,14 +117,12 @@ class ProfileForm(ModelForm):
 
             self.fields['role_ticket'].widget.choices = Role.TICKET_LEVEL
 
-
     def clean_role(self, *args, **kwargs):
         if int(self.cleaned_data['role']) == 0 and not \
             (self.data.get('role_name') or self.data.get('role_profession') or self.data.get('role_age')):
             raise ValidationError(u"Заполните поля роли, чтобы создать ее")
 
         return int(self.cleaned_data['role'])
-
 
     def clean(self):
         if self._errors:
@@ -147,7 +146,6 @@ class ProfileForm(ModelForm):
             self.cleaned_data['role'] = role
 
         return super(ProfileForm, self).clean()
-
 
     def errors_list(self):
         return [u"%s: %s" % (field == '__all__' and u'Общая ошибка' or self.fields[field].label, message) for field, l in self.errors.items() for message in l]

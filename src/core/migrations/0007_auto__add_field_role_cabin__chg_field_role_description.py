@@ -4,19 +4,18 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Role.cabin'
         db.add_column('core_role', 'cabin', self.gf('django.db.models.fields.IntegerField')(default=100), keep_default=False)
 
-
     def backwards(self, orm):
-        
+
         # Deleting field 'Role.cabin'
         db.delete_column('core_role', 'cabin')
-
 
     models = {
         'auth.group': {
