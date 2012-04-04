@@ -184,7 +184,7 @@ class AgreementForm(Form):
         raise ValidationError(u'Номер паспорта - 6 цифр')
 
     def clean_social_number(self):
-        if 1000000 <= self.cleaned_data['social_number'] <= 9999999:
+        if 1 <= self.cleaned_data['social_number'] <= 9999999:
             return self.cleaned_data['social_number']
         raise ValidationError(u'Номер страхового полиса - 7 цифр')
 
