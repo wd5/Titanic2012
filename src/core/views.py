@@ -349,7 +349,9 @@ def excel_report(func):
             for row in context['rows']:
                 csv += "\n" + u";".join((v.isdigit() or v.startswith('+')) and (u"_%s_" % v) or v for v in row)
 
-            return HttpResponse(csv.encode('cp1251'), mimetype="text/csv; charset=cp1251")
+            response = HttpResponse(csv.encode('cp1251'), mimetype="text/csv; charset=cp1251")
+            response['Content-Disposition'] = 'attachment; filename=report.csv'
+            return response
 
         else:
             return render_to_response(request, 'reports/csv.html', context)
