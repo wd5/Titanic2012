@@ -340,3 +340,28 @@ def report_agreements(request):
     return render_to_response(request, 'reports/agreements.html',
             {'profiles': Profile.objects.filter(agreement=True).order_by('name')}
     )
+
+def excel_report(func):
+    def wrapper(request):
+        context = func(request)
+        if request.GET.get('mode') == 'csv':
+            csv = u";".join(context['headers'])
+            for row in context['rows']:
+                csv += "\n" + u";".join(row)
+
+            return HttpResponse(csv.encode('cp1251'), mimetype="text/csv; charset=cp1251")
+
+        else:
+            return render_to_response(request, 'reports/csv.html', context)
+
+    return wrapper
+
+
+@permission_required('add_user')
+@excel_report
+def report_captain(request):
+    return {
+        'title': u"Для капитана",
+        'headers': [u"Роль", u"Каюта",],
+        'rows': [(role.name, role.profile.room and role.profile.room.title or '-') for role in Role.objects.filter(profile__isnull=False).order_by('ticket_level', 'cabin', 'profile__room', 'name')]
+    }

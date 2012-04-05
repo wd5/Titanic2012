@@ -2,9 +2,9 @@
 
 DATABASES = {
     'default': {
-        'HOST': '%(DATABASE_HOST)s',
-        'NAME': 'titanic',
         'ENGINE': 'django.db.backends.mysql',
+        'HOST': '%(DATABASE_HOST)s',
+        'NAME': '%(DATABASE_DB)s',
         'USER': '%(DATABASE_USER)s',
         'PASSWORD': '%(DATABASE_PASSWORD)s',
     }

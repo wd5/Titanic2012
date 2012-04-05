@@ -121,3 +121,11 @@ def local_env():
     with settings(warn_only=True):
         local('c:\\python\\python virtualenv.py ENV --system-site-packages')
     local('ENV\\Scripts\\pip install -r requirements.txt ')
+
+
+def update_local_db():
+    run("mysqldump -u %(DATABASE_USER)s -p%(DATABASE_PASSWORD)s -h %(DATABASE_HOST)s %(DATABASE_DB)s > dump.sql" % globals())
+    get("dump.sql", "dump.sql")
+    run("rm dump.sql")
+    local("mysql -uroot %(DATABASE_DB)s < dump.sql" % globals())
+    local("del dump.sql")
