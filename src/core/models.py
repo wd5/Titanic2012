@@ -177,11 +177,13 @@ class Profile(models.Model):
                 report = u"Измененные поля профиля [http://titanic2012.ru/form?change_user=%s]:\n" % self.user.pk + report
                 emails = [settings.MANAGERS[0][1], settings.ADMINS[0][1], self.user.email]
 
-                send_mail(u"Титаник 2012: изменения в профиле игрока %s" % self.name,
-                            report,
-                            settings.SERVER_EMAIL,
-                            emails,
-                            )
+                send_mail(
+                    u"Титаник 2012: изменения в профиле игрока %s" % self.name,
+                    report,
+                    settings.SERVER_EMAIL,
+                    emails,
+                    fail_silently=True,
+                )
 
         return super(Profile, self).save(*args, **kwargs)
 
@@ -208,22 +210,26 @@ class RoleConnection(models.Model):
                          (self.role.profile.user.pk, self.role,
                           self.role_rel, getattr(prev, 'comment') or '-', getattr(self, 'comment') or '-')
 
-                send_mail(u"Титаник 2012: изменения в связях роли %s" % self.role,
-                            report,
-                            settings.SERVER_EMAIL,
-                            emails,
-                            )
+                send_mail(
+                    u"Титаник 2012: изменения в связях роли %s" % self.role,
+                    report,
+                    settings.SERVER_EMAIL,
+                    emails,
+                    fail_silently=True,
+                )
         else:
             if self.role.profile:
                 profile = self.role.profile
             else:
                 profile = Profile.objects.filter(role=self.role)[0]
 
-            send_mail(u"Титаник 2012: новая связь между ролями",
+            send_mail(
+                u"Титаник 2012: новая связь между ролями",
                 u"Анкета: http://titanic2012.ru/form?change_user=%s\n\n%s -> %s\n\n%s"
                 % (profile.user.pk, self.role, self.role_rel, self.comment),
                 settings.SERVER_EMAIL,
                 emails,
+                fail_silently=True,
             )
 
         return super(RoleConnection, self).save(*args, **kwargs)
@@ -260,16 +266,19 @@ class LayerConnection(models.Model):
             if getattr(self, 'comment') != getattr(prev, 'comment'):
                 report = u"Измененный пласт: %s -> %s:\nБыло: %s\nСтало: '%s'" % (self.role, self.layer, getattr(prev, 'comment') or '-', getattr(self, 'comment') or '-')
 
-                send_mail(u"Титаник 2012: изменения в пласте роли %s" % self.role,
-                            report,
-                            settings.SERVER_EMAIL,
-                            emails,
-                            )
+                send_mail(
+                    u"Титаник 2012: изменения в пласте роли %s" % self.role,
+                    report,
+                    settings.SERVER_EMAIL,
+                    emails,
+                    fail_silently=True,
+                )
         else:
             send_mail(u"Титаник 2012: новый пласт роли",
                 u"%s -> %s\n\n%s" % (self.role, self.layer, self.comment),
                 settings.SERVER_EMAIL,
                 emails,
+                fail_silently=True,
             )
 
         return super(LayerConnection, self).save(*args, **kwargs)
@@ -369,22 +378,3 @@ class Room(models.Model):
         verbose_name = u"Комната"
         verbose_name_plural = u"Комнаты"
         ordering = ('title',)
-
-
-from south.modelsinspector import add_introspection_rules
-
-
-class ThumbnailImageFieldFile(models.fields.files.ImageFieldFile):
-    pass
-
-
-class ThumbnailImageField(models.ImageField):
-    attr_class = ThumbnailImageFieldFile
-
-rules = [(
-    (ThumbnailImageField, ),
-    [],
-        {},
-    ), ]
-
-add_introspection_rules(rules, ["^core", ])
