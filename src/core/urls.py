@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^reports/players_without_roles/$', report_players_without_roles),
     url(r'^reports/agreements/$', report_agreements),
     url(r'^reports/captain/$', report_captain),
+    url(r'^reports/bus/$', report_bus),
 
     url(r'^$', index, name='index'),
     )

@@ -347,7 +347,7 @@ def excel_report(func):
         if request.GET.get('mode') == 'csv':
             csv = u";".join(context['headers'])
             for row in context['rows']:
-                csv += "\n" + u";".join(row)
+                csv += "\n" + u";".join((v.isdigit() or v.startswith('+')) and (u"_%s_" % v) or v for v in row)
 
             return HttpResponse(csv.encode('cp1251'), mimetype="text/csv; charset=cp1251")
 
@@ -362,6 +362,16 @@ def excel_report(func):
 def report_captain(request):
     return {
         'title': u"Для капитана",
-        'headers': [u"Роль", u"Каюта",],
-        'rows': [(role.name, role.profile.room and role.profile.room.title or '-') for role in Role.objects.filter(profile__isnull=False).order_by('ticket_level', 'cabin', 'profile__room', 'name')]
+        'headers': [u"Каюта", u"Роль",],
+        'rows': [(role.profile.room and role.profile.room.title or '-', role.name) for role in Role.objects.filter(profile__isnull=False).order_by('ticket_level', 'cabin', 'profile__room', 'name')]
+    }
+
+
+@permission_required('add_user')
+@excel_report
+def report_bus(request):
+    return {
+        'title': u"Автобус",
+        'headers': [u"ФИО", u"Ник", u"Телефон", u"Город",],
+        'rows': [(profile.name, profile.user.username, profile.tel, profile.city) for profile in Profile.objects.filter(bus=True).order_by('name')]
     }
