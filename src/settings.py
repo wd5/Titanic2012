@@ -30,6 +30,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 IS_DEVEL = True
 TIMING = False
+TMP_FILE = '/tmp/titanic'
 
 SECRET_KEY = '12345'
 

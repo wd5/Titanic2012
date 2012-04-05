@@ -344,13 +344,21 @@ def report_agreements(request):
 def excel_report(func):
     def wrapper(request):
         context = func(request)
-        if request.GET.get('mode') == 'csv':
-            csv = u";".join(context['headers'])
-            for row in context['rows']:
-                csv += "\n" + u";".join((v.isdigit() or v.startswith('+')) and (u"_%s_" % v) or v for v in row)
+        if request.GET.get('mode') == 'xls':
+            import xlwt
+            wbk = xlwt.Workbook()
+            sheet = wbk.add_sheet('sheet')
 
-            response = HttpResponse(csv.encode('cp1251'), mimetype="text/csv; charset=cp1251")
-            response['Content-Disposition'] = 'attachment; filename=report.csv'
+            for i, header in enumerate(context['headers']):
+                sheet.write(0, i, header)
+
+            for x, row in enumerate(context['rows']):
+                for y, cell in enumerate(row):
+                    sheet.write(x + 1, y, cell)
+
+            wbk.save(settings.TMP_FILE)
+            response = HttpResponse(open(settings.TMP_FILE, 'rb').read(), mimetype="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'attachment; filename=report.xls'
             return response
 
         else:
@@ -376,4 +384,48 @@ def report_bus(request):
         'title': u"Автобус",
         'headers': [u"ФИО", u"Ник", u"Телефон", u"Город",],
         'rows': [(profile.name, profile.user.username, profile.tel, profile.city) for profile in Profile.objects.filter(bus=True).order_by('name')]
+    }
+
+
+@permission_required('add_user')
+@excel_report
+def report_cafe(request):
+    return {
+        'title': u"Кафе",
+        'headers': [u"Класс", u"Роль", u"Сумма", u"Заказано питание"],
+        'rows': [(role.get_ticket_level_display(), role.name, role.profile.money_cafe, role.profile.food and u"да" or "")
+                for role in Role.objects.filter(profile__isnull=False).order_by('ticket_level', 'name')]
+    }
+
+
+@permission_required('add_user')
+@excel_report
+def report_casino(request):
+    return {
+        'title': u"Казино",
+        'headers': [u"Класс", u"Роль", u"Сумма"],
+        'rows': [(role.get_ticket_level_display(), role.name, role.profile.money_casino)
+            for role in Role.objects.filter(profile__isnull=False, profile__money_casino__gt=0).order_by('ticket_level', 'name')]
+    }
+
+
+@permission_required('add_user')
+@excel_report
+def report_base(request):
+    return {
+        'title': u"База",
+        'headers': [u"ФИО", u"Паспорт"],
+        'rows': [(profile.name, u"%s %s" % (profile.passport_serial or "", profile.passport_number or ""))
+            for profile in Profile.objects.all().order_by('name')]
+    }
+
+
+@permission_required('add_user')
+@excel_report
+def report_pay(request):
+    return {
+        'title': u"Оплата",
+        'headers': [u"ФИО", u"Ник", u"Роль", u"Взнос", u"Питание"],
+        'rows': [(profile.name, profile.user.username, profile.role and profile.role.name or '-', profile.paid and u"да" or "", profile.food and u"да" or "", )
+            for profile in Profile.objects.all().order_by('-paid', 'name')]
     }
