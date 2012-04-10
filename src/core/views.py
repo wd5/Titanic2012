@@ -187,40 +187,18 @@ def gallery(request, gallery_id):
 
 
 def bus(request):
-    if request.user.is_authenticated() and request.GET:
-        profile = request.user.get_profile()
-        if request.GET.get('bus') == 'on':
-            profile.bus = True
-        elif request.GET.get('bus') == 'off':
-            profile.bus = False
-        profile.save(check_diff=False)
-        return HttpResponseRedirect(reverse('bus'))
-
     context = {'passangers': Profile.objects.filter(bus=True),
                'page': FlatPage.objects.get(url='/bus'),
                }
-    if request.user.is_authenticated():
-        context['profile'] = request.user.get_profile()
 
     return render_to_response(request, 'bus.html', context)
 
 
 def food(request):
-    if request.user.is_authenticated() and request.GET:
-        profile = request.user.get_profile()
-        if request.GET.get('food') == 'on':
-            profile.food = True
-        elif request.GET.get('food') == 'off':
-            profile.food = False
-        profile.save(check_diff=False)
-        return HttpResponseRedirect(reverse('food'))
-
     context = {
         'profiles': Profile.objects.filter(food=True),
         'page': FlatPage.objects.get(url='/food'),
     }
-    if request.user.is_authenticated():
-        context['profile'] = request.user.get_profile()
 
     return render_to_response(request, 'food.html', context)
 
