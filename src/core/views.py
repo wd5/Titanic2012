@@ -361,7 +361,8 @@ def report_bus(request):
     return {
         'title': u"Автобус",
         'headers': [u"ФИО", u"Ник", u"Телефон", u"Город",],
-        'rows': [(profile.name, profile.user.username, profile.tel, profile.city) for profile in Profile.objects.filter(bus=True).order_by('name')]
+        'rows': [(role.profile.name, role.profile.user.username, role.profile.tel, role.profile.city)
+            for role in Role.objects.filter(profile__isnull=False, profile__bus=True).order_by('profile__name').select_related('profile')]
     }
 
 
@@ -372,7 +373,7 @@ def report_cafe(request):
         'title': u"Кафе",
         'headers': [u"Класс", u"Роль", u"Сумма", u"Заказано питание"],
         'rows': [(role.get_ticket_level_display(), role.name, role.profile.money_cafe, role.profile.food and u"да" or "")
-                for role in Role.objects.filter(profile__isnull=False).order_by('ticket_level', 'name')]
+                for role in Role.objects.filter(profile__isnull=False).order_by('ticket_level', 'name').select_related('profile')]
     }
 
 
@@ -393,8 +394,8 @@ def report_base(request):
     return {
         'title': u"База",
         'headers': [u"ФИО", u"Паспорт"],
-        'rows': [(profile.name, u"%s %s" % (profile.passport_serial or "", profile.passport_number or ""))
-            for profile in Profile.objects.all().order_by('name')]
+        'rows': [(role.profile.name, u"%s %s" % (role.profile.passport_serial or "", role.profile.passport_number or ""))
+            for role in Role.objects.filter(profile__isnull=False).select_related('profile').order_by('profile__name')]
     }
 
 
@@ -403,7 +404,7 @@ def report_base(request):
 def report_pay(request):
     return {
         'title': u"Оплата",
-        'headers': [u"ФИО", u"Ник", u"Роль", u"Взнос", u"Питание"],
-        'rows': [(profile.name, profile.user.username, profile.role and profile.role.name or '-', profile.paid and u"да" or "", profile.food and u"да" or "", )
-            for profile in Profile.objects.all().order_by('-paid', 'name')]
+        'headers': [u"ФИО", u"Ник", u"Роль", u"Телефон", u"Взнос", u"Питание"],
+        'rows': [(role.profile.name, role.profile.user.username, role.name, role.profile.tel, role.profile.paid and u"да" or "", role.profile.food and u"да" or "", )
+            for role in Role.objects.filter(profile__isnull=False).select_related('profile').order_by('-profile__paid', 'profile__name')]
     }
