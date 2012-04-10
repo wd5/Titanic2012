@@ -266,7 +266,7 @@ def agreement(request, current_user):
 def reports(request):
     return render_to_response(request, 'reports/index.html',
                               {'emails': ", ".join(user.email for user in User.objects.all()),
-                               'profiles': Profile.objects.all().order_by('role__ticket_level'),
+                               'profiles': Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('role__ticket_level'),
                                'locked_roles_amount': Role.objects.filter(profile__isnull=False).count(),
                               })
 
@@ -274,28 +274,28 @@ def reports(request):
 @permission_required('add_user')
 def report_actions(request):
     return render_to_response(request, 'reports/actions.html',
-                          {'profiles': Profile.objects.filter(Q(wsl_actions__gt=0) | Q(gl_actions__gt=0))}
+                          {'profiles': Profile.objects.filter(Q(wsl_actions__gt=0) | Q(gl_actions__gt=0)).filter(role__isnull=False, locked_fields__contains='role')}
                           )
 
 
 @permission_required('add_user')
 def report_money(request):
     return render_to_response(request, 'reports/money.html',
-                          {'profiles': Profile.objects.all()}
+                          {'profiles': Profile.objects.filter(role__isnull=False, locked_fields__contains='role')}
                           )
 
 
 @permission_required('add_user')
 def report_contacts(request):
     return render_to_response(request, 'reports/contacts.html',
-                          {'profiles': Profile.objects.all().filter(role__isnull=False, locked_fields__contains='role').order_by('role__ticket_level', 'role__order')}
+                          {'profiles': Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('role__ticket_level', 'role__order')}
                           )
 
 
 @permission_required('add_user')
 def report_paid(request):
     return render_to_response(request, 'reports/paid.html',
-                          {'profiles': Profile.objects.all().order_by('-paid', 'name')}
+                          {'profiles': Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('-paid', 'name')}
                           )
 
 
