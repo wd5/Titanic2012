@@ -8,7 +8,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
 
-    <link rel="stylesheet" href="{% MEDIA_URL %}main.css?5"/>
+    <link rel="stylesheet" href="{% MEDIA_URL %}main.css?6"/>
 
 </head>
 <body>
@@ -98,7 +98,7 @@
                 {% if profile.layers %}
                     <h3>Пласты</h3>
                     <table class="b-full-report">
-                        {% for layer in profile.layer %}
+                        {% for layer in profile.layers %}
                             <tr>
                                 <th>{{ layer.layer }}</th>
                                 <td>{{ layer.comment }}</td>

@@ -415,6 +415,8 @@ def report_full(request):
     profiles = Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('role__cabin', 'role__order', 'name').select_related('role')
     if request.GET.get('n'):
         profiles = profiles[:int(request.GET.get('n'))]
+    if request.GET.get('id'):
+        profiles = profiles.filter(id=int(request.GET.get('id')))
 
     for profile in profiles:
         profile.connections = list(RoleConnection.objects.filter(role=profile.role))

@@ -341,4 +341,5 @@ body .ui-tooltip { border-width:2px; }
      text-align: left;
      padding: 3px;
      border: 1px solid black;
+     vertical-align: top;
  }
