@@ -109,9 +109,7 @@ class ProfileForm(ModelForm):
                 del self.fields['special']
 
         if 'role' in self.fields:
-            self.fields['role'].widget.choices = [(role.pk, u"[%s] %s, %s, %s, %s лет" % (role.get_ticket_level_display(), role.name,
-                                                                                          role.profession, role.get_sex_display(),
-                                                                                          role.age)) \
+            self.fields['role'].widget.choices = [(role.pk, role.full_info()) \
                                                             for role in self.roles]
             self.fields['role'].widget.choices.append((0, u'-- своя роль --'))
 

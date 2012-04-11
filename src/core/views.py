@@ -408,3 +408,16 @@ def report_pay(request):
         'rows': [(role.profile.name, role.profile.user.username, role.name, role.profile.tel, role.profile.paid and u"да" or "", role.profile.food and u"да" or "", )
             for role in Role.objects.filter(profile__isnull=False).select_related('profile').order_by('-profile__paid', 'profile__name')]
     }
+
+
+@permission_required('add_user')
+def report_full(request):
+    profiles = Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('role__cabin', 'role__order', 'name')[:5]
+    for profile in profiles:
+        profile.connections = list(RoleConnection.objects.filter(role=profile.role))
+        profile.layers = list(LayerConnection.objects.filter(role=profile.role))
+        profile.additional_info = profile.connections or profile.layers
+
+    return render_to_response(request, 'reports/full.html',
+            {'profiles': profiles}
+    )

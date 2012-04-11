@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     url(r'^reports/casino/$', report_casino),
     url(r'^reports/base/$', report_base),
     url(r'^reports/pay/$', report_pay),
+    url(r'^reports/full/$', report_full),
 
     url(r'^$', index, name='index'),
     )

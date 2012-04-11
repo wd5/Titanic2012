@@ -51,6 +51,12 @@ class Role(models.Model):
     def __unicode__(self):
         return self.name
 
+    def full_info(self):
+        return u"[%s] %s, %s, %s, %s лет" % \
+               (self.get_ticket_level_display(), self.name,
+                self.profession, self.get_sex_display(), self.age
+                )
+
     class Meta:
         verbose_name = u"Роль"
         verbose_name_plural = u"Роли"

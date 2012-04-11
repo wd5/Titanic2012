@@ -11,6 +11,7 @@
 
         {% for item in group.list %}
             <tr class="{% cycle 'odd' 'even' %}">
+                <td>{{ item.role.profile.name }}</td>
                 <td>{{ item.role.profile.user.email }}</td>
                 <td>{{ item.role }}</td>
                 <td>{{ item.comment }}</td>
