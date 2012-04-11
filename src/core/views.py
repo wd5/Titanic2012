@@ -412,7 +412,10 @@ def report_pay(request):
 
 @permission_required('add_user')
 def report_full(request):
-    profiles = Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('role__cabin', 'role__order', 'name')[:5]
+    profiles = Profile.objects.filter(role__isnull=False, locked_fields__contains='role').order_by('role__cabin', 'role__order', 'name').select_related('role')
+    if request.GET.get('n'):
+        profiles = profiles[:int(request.GET.get('n'))]
+
     for profile in profiles:
         profile.connections = list(RoleConnection.objects.filter(role=profile.role))
         profile.layers = list(LayerConnection.objects.filter(role=profile.role))
