@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     url(r'^reports/base/$', report_base),
     url(r'^reports/pay/$', report_pay),
     url(r'^reports/full/$', report_full),
+    url(r'^reports/not_bus/$', report_not_bus),
 
     url(r'^$', index, name='index'),
     )

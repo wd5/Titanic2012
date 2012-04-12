@@ -426,3 +426,14 @@ def report_full(request):
     return render_to_response(request, 'reports/full.html',
             {'profiles': profiles}
     )
+
+
+@permission_required('add_user')
+@excel_report
+def report_not_bus(request):
+    return {
+        'title': u"Игроки, не заказавшие автобус",
+        'headers': [u"ФИО", u"Ник", u"Роль"],
+        'rows': [(role.profile.name, role.profile.user.username, role.name)
+            for role in Role.objects.filter(profile__isnull=False, profile__bus=False).select_related('profile').order_by('profile__name')]
+    }
