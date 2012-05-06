@@ -2,6 +2,8 @@
 {% load content %}
 
 {% block content %}
+    Игра закончена.
+    <!--
     <h1>{% if current_user.username %}{{ current_user.username }} - ф{% else %}Ф{% endif %}орма заявки
         {% if is_superuser %}<small>(<a href="/reports/full/?id={{ current_user.id }}" target="_blank">печать</a>)</small>{% endif %}
     </h1>
@@ -30,6 +32,7 @@
         <input type="submit" value="Сохранить" style="margin-left: 200px; padding: 5 20; font-size: 150%"/>
 
     </form>
+    -->
 
     <script>
       function get_money_total(){
