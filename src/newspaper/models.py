@@ -11,7 +11,8 @@ class Post(models.Model):
         (2, u'The Economist'),
         (3, u'Manchester Guardian'),
         (4, u'NewYork Post'),
-    )
+        (5, u'Отчеты'),
+        )
     newspaper = models.IntegerField(choices=NEWSPAPER, default=1, verbose_name=u"Газета")
     date_created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=200, verbose_name=u"Заголовок")
