@@ -16,7 +16,10 @@ AWS_SECRET_ACCESS_KEY = '%(SES_SECRET_ACCESS_KEY)s'
 
 SECRET_KEY = '%(DJANGO_SECRET_KEY)s'
 
+
 YAFOTKI_STORAGE_OPTIONS = {
     'username': '%(YAFOTKI_ACCOUNT_NAME)s',
-    'password': '%(YAFOTKI_ACCOUNT_PASSWORD)s'
+    'token': '%(YAFOTKI_TOKEN)s',
+    'post': '%(YAFOTKI_POST)s',
+    'host': 'api-fotki.yandex.ru',
 }
